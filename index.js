@@ -56,6 +56,16 @@ function get_domain(domain) {
                 }
             }
         }
+        else if (tld == "bnb") {
+            const response = yield fetch(`https://api.prd.space.id/v1/getAddress?tld=bnb&domain=${domain}`);
+            obj.blockchain = "bnb";
+            obj.address = (yield response.json())['address'];
+        }
+        else if (tld == "apt") {
+            const response = yield fetch(`https://www.aptosnames.com/api/mainnet/v1/address/${domain}`);
+            obj.address = (yield response.json())['address'];
+            obj.blockchain = "aptos";
+        }
         return obj;
     });
 }

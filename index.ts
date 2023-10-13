@@ -49,6 +49,17 @@ async function get_domain(domain:string) {
 
     }
   }
+  else if(tld=="bnb") {
+    const response = await fetch(`https://api.prd.space.id/v1/getAddress?tld=bnb&domain=${domain}`);
+    obj.blockchain="bnb"
+    obj.address = (await response.json())['address']
 
-  return obj
+  }
+  else if(tld=="apt") {
+    const response = await fetch(`https://www.aptosnames.com/api/mainnet/v1/address/${domain}`);
+    obj.address =  (await response.json())['address'];
+    obj.blockchain = "aptos";
+  }
+
+  return obj;
 }
