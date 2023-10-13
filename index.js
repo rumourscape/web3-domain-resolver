@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const ethers_1 = require("ethers");
+const spl_name_service_1 = require("@bonfida/spl-name-service");
 dotenv_1.default.config();
 const network = "homestead";
 const provider = ethers_1.ethers.getDefaultProvider(network, { etherscan: process.env.ETHERSCAN_KEY });
@@ -65,6 +66,10 @@ function get_domain(domain) {
             const response = yield fetch(`https://www.aptosnames.com/api/mainnet/v1/address/${domain}`);
             obj.address = (yield response.json())['address'];
             obj.blockchain = "aptos";
+        }
+        else if (tld == "sol") {
+            obj.address = (0, spl_name_service_1.getDomainKeySync)(domain)['pubkey'].toString();
+            obj.blockchain = "solana";
         }
         return obj;
     });

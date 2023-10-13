@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { ethers } from "ethers";
+import { getDomainKeySync } from "@bonfida/spl-name-service";
 
 dotenv.config();
 
@@ -51,14 +52,18 @@ async function get_domain(domain:string) {
   }
   else if(tld=="bnb") {
     const response = await fetch(`https://api.prd.space.id/v1/getAddress?tld=bnb&domain=${domain}`);
-    obj.blockchain="bnb"
-    obj.address = (await response.json())['address']
+    obj.blockchain="bnb";
+    obj.address = (await response.json())['address'];
 
   }
   else if(tld=="apt") {
     const response = await fetch(`https://www.aptosnames.com/api/mainnet/v1/address/${domain}`);
     obj.address =  (await response.json())['address'];
     obj.blockchain = "aptos";
+  }
+  else if(tld=="sol") {
+    obj.address = getDomainKeySync(domain)['pubkey'].toString();
+    obj.blockchain = "solana";
   }
 
   return obj;
